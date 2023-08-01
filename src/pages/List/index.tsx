@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react'
-import { useRoutes, Outlet, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import ContentHeader from '../../components/ContentHeader'
 import SelectInput from '../../components/SelectInput'

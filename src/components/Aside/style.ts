@@ -1,11 +1,10 @@
 import styled, { css } from 'styled-components'
 
-interface IContainerProps {
-	menuIsOpen: boolean
-}
-
 interface IThemeToggleFooterProps {
 	menuIsOpen: boolean
+}
+interface IContainerProps {
+	$menuIsOpen: boolean
 }
 
 export const Container = styled.div<IContainerProps>`
@@ -25,11 +24,11 @@ export const Container = styled.div<IContainerProps>`
 
 		width: 170px;
 
-		height: ${(props) => (props.menuIsOpen ? '100vh' : '70px')};
+		height: ${(props) => (props.$menuIsOpen ? '100vh' : '70px')};
 		overflow: hidden;
 
 		${(props) =>
-			!props.menuIsOpen &&
+			!props.$menuIsOpen &&
 			css`
 				border: none;
 				border-bottom: 1px solid ${(props) => props.theme.colors.gray};

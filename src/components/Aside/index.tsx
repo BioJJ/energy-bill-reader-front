@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import logoImg from '../../assets/logo.svg'
 
 import {
@@ -18,17 +18,22 @@ import {
 	MenuContainer,
 	MenuItemLink,
 	MenuItemButton,
-	ToggleMenu,
-	ThemeToggleFooter
+	ToggleMenu
 } from './style'
 
 const Aside: React.FC = () => {
+	const [toggleMenuIsOpened, setToggleMenuIsOpened] = useState(false)
+
+	const handleToggleMenu = () => {
+		setToggleMenuIsOpened(!toggleMenuIsOpened)
+	}
+
 	return (
-		<Container menuIsOpen={false}>
+		<Container $menuIsOpen={toggleMenuIsOpened}>
 			<Header>
-				{/* <ToggleMenu onClick={handleToggleMenu}>
+				<ToggleMenu onClick={handleToggleMenu}>
 					{toggleMenuIsOpened ? <MdClose /> : <MdMenu />}
-				</ToggleMenu> */}
+				</ToggleMenu>
 
 				<LogImg src={logoImg} alt="Logo Energy Bill" />
 				<Title>Energy Bill</Title>

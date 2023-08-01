@@ -1,7 +1,12 @@
-import React from 'react'
-
+import React, { ReactNode } from 'react'
 import { Container } from './style'
 
-const Content: React.FC = ({ children }) => <Container>{children}</Container>
+interface ContentProps {
+	children: ReactNode
+}
+
+const Content: React.FunctionComponent<ContentProps> = ({ children }) => (
+	<Container>{children}</Container>
+)
 
 export default Content
