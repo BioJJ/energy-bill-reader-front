@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 
 interface IThemeToggleFooterProps {
-	menuIsOpen: boolean
+	$menuIsOpen: boolean
 }
 interface IContainerProps {
 	$menuIsOpen: boolean
@@ -141,6 +141,6 @@ export const ThemeToggleFooter = styled.footer<IThemeToggleFooterProps>`
 	bottom: 30px;
 
 	@media (max-width: 470px) {
-		display: ${(props) => (props.menuIsOpen ? 'flex' : 'none')};
+		display: ${(props) => (props.$menuIsOpen ? 'flex' : 'none')};
 	}
 `
