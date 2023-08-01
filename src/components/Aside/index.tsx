@@ -45,10 +45,10 @@ const Aside: React.FC = () => {
 					Historico
 				</MenuItemLink>
 
-				{/* <MenuItemLink href="/list/exit-balance">
+				<MenuItemLink href="/list/exit-balance">
 					<MdArrowDownward />
 					Saídas
-				</MenuItemLink> */}
+				</MenuItemLink>
 
 				<MenuItemButton>
 					<MdExitToApp />
