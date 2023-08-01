@@ -13,14 +13,6 @@ import listOfMonths from '../../utils/months'
 
 import { Container, Content, Filters } from './style'
 
-interface IRouteParams {
-	match: {
-		params: {
-			type: string
-		}
-	}
-}
-
 interface IData {
 	id: string
 	description: string
@@ -30,7 +22,7 @@ interface IData {
 	tagColor: string
 }
 
-const List: React.FC<IRouteParams> = ({ match }) => {
+const List: React.FC = () => {
 	const [data, setData] = useState<IData[]>([])
 	const [monthSelected, setMonthSelected] = useState<number>(
 		new Date().getMonth() + 1

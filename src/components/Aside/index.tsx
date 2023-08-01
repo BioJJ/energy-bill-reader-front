@@ -22,9 +22,12 @@ import {
 	ThemeToggleFooter
 } from './style'
 import Toggle from '../Toggle'
+
 import { useTheme } from '../../hooks/theme'
+import { useAuth } from '../../hooks/auth'
 
 const Aside: React.FC = () => {
+	const { signOut } = useAuth()
 	const { toggleTheme, theme } = useTheme()
 
 	const [toggleMenuIsOpened, setToggleMenuIsOpened] = useState(false)
@@ -68,7 +71,7 @@ const Aside: React.FC = () => {
 					Saídas
 				</MenuItemLink>
 
-				<MenuItemButton>
+				<MenuItemButton onClick={signOut}>
 					<MdExitToApp />
 					Sair
 				</MenuItemButton>
