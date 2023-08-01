@@ -1,46 +1,176 @@
-import React, { useState } from 'react'
-import { Container, Content, Filters } from './style'
+import React, { useMemo, useState, useEffect } from 'react'
+import { useRoutes, Outlet, useParams } from 'react-router-dom'
+
 import ContentHeader from '../../components/ContentHeader'
 import SelectInput from '../../components/SelectInput'
 import HistoryFinanceCard from '../../components/HistoryFinanceCard'
 
-const List: React.FC = () => {
-	const [frequencyFilterSelected, setFrequencyFilterSelected] = useState([
-		'pendente',
-		'pagas'
-	])
-	const months = [
-		{ value: 7, label: 'Julho' },
-		{ value: 8, label: 'Agosto' },
-		{ value: 9, label: 'Setembro' }
-	]
+import gains from '../../repositories/gains'
+import expenses from '../../repositories/expenses'
+import formatCurrency from '../../utils/formatCurrency'
+import formatDate from '../../utils/formatDate'
+import listOfMonths from '../../utils/months'
 
-	const years = [
-		{ value: 2018, label: '2018' },
-		{ value: 2019, label: '2019' },
-		{ value: 2020, label: '2020' }
-	]
+import { Container, Content, Filters } from './style'
 
-	const handleMonthSelected = (month: string) => {
-		console.log(month)
+interface IRouteParams {
+	match: {
+		params: {
+			type: string
+		}
 	}
+}
+
+interface IData {
+	id: string
+	description: string
+	amountFormatted: string
+	frequency: string
+	dateFormatted: string
+	tagColor: string
+}
+
+const List: React.FC<IRouteParams> = ({ match }) => {
+	const [data, setData] = useState<IData[]>([])
+	const [monthSelected, setMonthSelected] = useState<number>(
+		new Date().getMonth() + 1
+	)
+	const [yearSelected, setYearSelected] = useState<number>(
+		new Date().getFullYear()
+	)
+	const [frequencyFilterSelected, setFrequencyFilterSelected] = useState([
+		'recorrente',
+		'eventual'
+	])
+
+	const params = useParams()
+	const movimentType = params.type
+
+	const pageData = useMemo(() => {
+		return movimentType === 'entry-balance'
+			? {
+					title: 'Entradas',
+					lineColor: '#4E41F0',
+					data: gains
+			  }
+			: {
+					title: 'Saídas',
+					lineColor: '#E44C4E',
+					data: expenses
+			  }
+	}, [movimentType])
+
+	const years = useMemo(() => {
+		const uniqueYears: number[] = []
+
+		const { data } = pageData
+
+		data.forEach((item) => {
+			const date = new Date(item.date)
+			const year = date.getFullYear()
+
+			if (!uniqueYears.includes(year)) {
+				uniqueYears.push(year)
+			}
+		})
+
+		return uniqueYears.map((year) => {
+			return {
+				value: year,
+				label: year
+			}
+		})
+	}, [pageData])
+
+	const months = useMemo(() => {
+		return listOfMonths.map((month, index) => {
+			return {
+				value: index + 1,
+				label: month
+			}
+		})
+	}, [])
 
 	const handleFrequencyClick = (frequency: string) => {
-		console.log(frequency)
+		const alreadySelected = frequencyFilterSelected.findIndex(
+			(item) => item === frequency
+		)
+
+		if (alreadySelected >= 0) {
+			const filtered = frequencyFilterSelected.filter(
+				(item) => item !== frequency
+			)
+			setFrequencyFilterSelected(filtered)
+		} else {
+			setFrequencyFilterSelected((prev) => [...prev, frequency])
+		}
 	}
+
+	const handleMonthSelected = (month: string) => {
+		try {
+			const parseMonth = Number(month)
+			setMonthSelected(parseMonth)
+		} catch {
+			throw new Error('invalid month value. Is accept 0 - 24.')
+		}
+	}
+
+	const handleYearSelected = (year: string) => {
+		try {
+			const parseYear = Number(year)
+			setYearSelected(parseYear)
+		} catch {
+			throw new Error('invalid year value. Is accept integer numbers.')
+		}
+	}
+
+	useEffect(() => {
+		const { data } = pageData
+
+		// const filteredData = data.filter((item) => {
+		// 	const date = new Date(item.date)
+		// 	const month = date.getMonth() + 1
+		// 	const year = date.getFullYear()
+
+		// 	return (
+		// 		month === monthSelected &&
+		// 		year === yearSelected &&
+		// 		frequencyFilterSelected.includes(item.frequency)
+		// 	)
+		// })
+
+		const formattedData = data.map((item) => {
+			return {
+				id: String(Math.random() * 2),
+				description: item.description,
+				amountFormatted: formatCurrency(Number(item.amount)),
+				frequency: item.frequency,
+				dateFormatted: formatDate(item.date),
+				tagColor: item.frequency === 'recorrente' ? '#4E41F0' : '#E44C4E'
+			}
+		})
+
+		setData(formattedData)
+	}, [
+		pageData,
+		monthSelected,
+		yearSelected,
+		data.length,
+		frequencyFilterSelected
+	])
+
 	return (
 		<Container>
-			<ContentHeader title={'historico'} lineColor={'#4E41F0'}>
+			<ContentHeader title={pageData.title} lineColor={pageData.lineColor}>
 				<SelectInput
 					options={months}
 					onChange={(e) => handleMonthSelected(e.target.value)}
-					defaultValue={1}
+					defaultValue={monthSelected}
 				/>
-
 				<SelectInput
 					options={years}
-					onChange={(e) => handleMonthSelected(e.target.value)}
-					defaultValue={1}
+					onChange={(e) => handleYearSelected(e.target.value)}
+					defaultValue={yearSelected}
 				/>
 			</ContentHeader>
 
@@ -51,11 +181,12 @@ const List: React.FC = () => {
                     tag-filter 
                     tag-filter-recurrent
                     ${
-											frequencyFilterSelected.includes('pagas') && 'tag-actived'
+											frequencyFilterSelected.includes('recorrente') &&
+											'tag-actived'
 										}`}
-					onClick={() => handleFrequencyClick('pagas')}
+					onClick={() => handleFrequencyClick('recorrente')}
 				>
-					Pagas
+					Recorrentes
 				</button>
 
 				<button
@@ -64,22 +195,25 @@ const List: React.FC = () => {
                     tag-filter 
                     tag-filter-eventual
                     ${
-											frequencyFilterSelected.includes('pendente') &&
+											frequencyFilterSelected.includes('eventual') &&
 											'tag-actived'
 										}`}
-					onClick={() => handleFrequencyClick('pendente')}
+					onClick={() => handleFrequencyClick('eventual')}
 				>
-					Pendentes
+					Eventuais
 				</button>
 			</Filters>
 
 			<Content>
-				<HistoryFinanceCard
-					tagColor="#623133"
-					title="Conta de luz"
-					subtitle="27/08/2023"
-					amount="R$ 700,00"
-				/>
+				{data.map((item) => (
+					<HistoryFinanceCard
+						key={item.id}
+						tagColor={item.tagColor}
+						title={item.description}
+						subtitle={item.dateFormatted}
+						amount={item.amountFormatted}
+					/>
+				))}
 			</Content>
 		</Container>
 	)
