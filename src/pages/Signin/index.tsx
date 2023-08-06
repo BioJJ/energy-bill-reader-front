@@ -1,19 +1,36 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import logoImg from '../../assets/logo.svg'
 
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 
-import { useAuth } from '../../hooks/auth'
+import { useRequests } from '../../hooks/auth'
 
 import { Container, Logo, Form, FormTitle } from './style'
 
 const SignIn: React.FC = () => {
+	const navigate = useNavigate()
 	const [email, setEmail] = useState<string>('')
 	const [password, setPassword] = useState<string>('')
 
-	const { signIn } = useAuth()
+	const { authRequest, loading } = useRequests()
+
+	const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setEmail(event.target.value)
+	}
+
+	const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setPassword(event.target.value)
+	}
+
+	const handleLogin = () => {
+		authRequest(navigate, {
+			email: email,
+			password: password
+		})
+	}
 
 	return (
 		<Container>
@@ -22,23 +39,30 @@ const SignIn: React.FC = () => {
 				<h2>Minha Carteira</h2>
 			</Logo>
 
-			<Form onSubmit={() => signIn(email, password)}>
+			<Form>
 				<FormTitle>Entrar</FormTitle>
 
 				<Input
 					type="email"
 					placeholder="e-mail"
 					required
-					onChange={(e) => setEmail(e.target.value)}
+					onChange={handleEmail}
 				/>
 				<Input
 					type="password"
 					placeholder="senha"
 					required
-					onChange={(e) => setPassword(e.target.value)}
+					onChange={handlePassword}
 				/>
 
-				<Button type="submit">Acessar</Button>
+				<Button
+					loading={loading}
+					type="primary"
+					margin="30px 0px 16px 0px"
+					onClick={handleLogin}
+				>
+					Acessar
+				</Button>
 			</Form>
 		</Container>
 	)

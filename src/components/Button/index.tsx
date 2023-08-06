@@ -1,11 +1,13 @@
-import React, { ButtonHTMLAttributes } from 'react'
+import { ButtonProps } from 'antd'
 
-import { Container } from './style'
+import { ButtonAntd } from './style'
 
-type IButtonProps = ButtonHTMLAttributes<HTMLButtonElement>
+interface ButtonCurrentProps extends ButtonProps {
+	margin?: string
+}
 
-const Button: React.FC<IButtonProps> = ({ children, ...rest }) => (
-	<Container {...rest}>{children}</Container>
-)
+const Button = ({ margin, ...props }: ButtonCurrentProps) => {
+	return <ButtonAntd style={{ margin }} {...props} />
+}
 
 export default Button

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
+import { Modal } from 'antd'
 import logoImg from '../../assets/logo.svg'
+import { useNavigate } from 'react-router-dom'
 
 import {
 	MdDashboard,
@@ -24,11 +26,20 @@ import {
 import Toggle from '../Toggle'
 
 import { useTheme } from '../../hooks/theme'
-import { useAuth } from '../../hooks/auth'
+import { logout } from '../../functions/connections/auth'
 
 const Aside: React.FC = () => {
-	const { signOut } = useAuth()
+	const navigate = useNavigate()
 	const { toggleTheme, theme } = useTheme()
+	const [open, setOpen] = useState(false)
+
+	const showModal = () => {
+		setOpen(true)
+	}
+
+	const hideModal = () => {
+		setOpen(false)
+	}
 
 	const [toggleMenuIsOpened, setToggleMenuIsOpened] = useState(false)
 	const [darkTheme, setDarkTheme] = useState(() =>
@@ -44,6 +55,10 @@ const Aside: React.FC = () => {
 		toggleTheme()
 	}
 
+	// function handleSignOut(): void {
+	// 	logout(navigate)
+	// }
+
 	return (
 		<Container $menuIsOpen={toggleMenuIsOpened}>
 			<Header>
@@ -56,7 +71,7 @@ const Aside: React.FC = () => {
 			</Header>
 
 			<MenuContainer>
-				<MenuItemLink href="/">
+				<MenuItemLink href="/dashboard">
 					<MdDashboard />
 					Dashboard
 				</MenuItemLink>
@@ -71,7 +86,7 @@ const Aside: React.FC = () => {
 					Saídas
 				</MenuItemLink>
 
-				<MenuItemButton onClick={signOut}>
+				<MenuItemButton onClick={showModal}>
 					<MdExitToApp />
 					Sair
 				</MenuItemButton>
@@ -85,6 +100,17 @@ const Aside: React.FC = () => {
 					onChange={handleChangeTheme}
 				/>
 			</ThemeToggleFooter>
+
+			<Modal
+				title="Atenção"
+				open={open}
+				onOk={() => logout(navigate)}
+				onCancel={hideModal}
+				okText="Sim"
+				cancelText="Cancelar"
+			>
+				<p data-testid={'HEADER_MODAL_P'}>Tem certeza que deseja sair?</p>
+			</Modal>
 		</Container>
 	)
 }
