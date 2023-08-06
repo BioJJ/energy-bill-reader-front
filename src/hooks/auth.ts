@@ -4,13 +4,18 @@ import { NavigateFunction } from 'react-router-dom'
 import { DashboardRoutesEnum } from '../routes/app.routes'
 import { AuthType } from '../types/AuthType'
 import { useGlobalReducer } from '../store/reducers/globalReducer/useGlobalReducer'
-import { ERROR_INVALID_PASSWORD } from '../constants/errorStatus'
-import { URL_AUTH } from '../constants/urls'
+import {
+	ERROR_INVALID_PASSWORD,
+	ERROR_USER_CREATE
+} from '../constants/errorStatus'
+import { URL_AUTH, URL_USER_CREATE } from '../constants/urls'
 import { setAuthorizationToken } from '../functions/connections/auth'
 import ConnectionAPI, {
 	connectionAPIPost,
 	MethodType
 } from '../functions/connections/connectionsAPI'
+import { User } from '../types/User'
+import { LoginRoutesEnum } from '../routes/auth.routes'
 
 export const useRequests = () => {
 	const [loading, setLoading] = useState(false)
@@ -74,9 +79,32 @@ export const useRequests = () => {
 		setLoading(false)
 	}
 
+	const newUserRequest = async (
+		navigate: NavigateFunction,
+		body: unknown
+	): Promise<void> => {
+		setLoading(true)
+
+		await connectionAPIPost<User>(URL_USER_CREATE, body)
+			.then(() => {
+				setNotification(
+					'Cadastro Realizado com sucesso!',
+					'success',
+					'realize o login!!'
+				)
+				navigate(LoginRoutesEnum.LOGIN)
+			})
+			.catch(() => {
+				setNotification(ERROR_USER_CREATE, 'error')
+			})
+
+		setLoading(false)
+	}
+
 	return {
 		loading,
 		authRequest,
+		newUserRequest,
 		request
 	}
 }

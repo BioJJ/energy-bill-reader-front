@@ -55,10 +55,6 @@ const Aside: React.FC = () => {
 		toggleTheme()
 	}
 
-	// function handleSignOut(): void {
-	// 	logout(navigate)
-	// }
-
 	return (
 		<Container $menuIsOpen={toggleMenuIsOpened}>
 			<Header>
@@ -79,11 +75,6 @@ const Aside: React.FC = () => {
 				<MenuItemLink href="/list/entry-balance">
 					<MdArrowUpward />
 					Historico
-				</MenuItemLink>
-
-				<MenuItemLink href="/list/exit-balance">
-					<MdArrowDownward />
-					Saídas
 				</MenuItemLink>
 
 				<MenuItemButton onClick={showModal}>
