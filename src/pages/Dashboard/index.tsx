@@ -17,6 +17,7 @@ import MessageBox from '../../components/MessageBox'
 import PieChartBox from '../../components/PieChartBox'
 import HistoryBox from '../../components/HistoryBox'
 import BarChartBox from '../../components/BarChartBox'
+import Layout from '../../components/Layout'
 
 const Dashboard: React.FC = () => {
 	const [monthSelected, setMonthSelected] = useState<number>(
@@ -320,71 +321,73 @@ const Dashboard: React.FC = () => {
 	}, [])
 
 	return (
-		<Container>
-			<ContentHeader title="Dashboard" lineColor="#F7931B">
-				<SelectInput
-					options={months}
-					onChange={(e) => handleMonthSelected(e.target.value)}
-					defaultValue={monthSelected}
-				/>
-				<SelectInput
-					options={years}
-					onChange={(e) => handleYearSelected(e.target.value)}
-					defaultValue={yearSelected}
-				/>
-			</ContentHeader>
+		<Layout>
+			<Container>
+				<ContentHeader title="Dashboard" lineColor="#F7931B">
+					<SelectInput
+						options={months}
+						onChange={(e) => handleMonthSelected(e.target.value)}
+						defaultValue={monthSelected}
+					/>
+					<SelectInput
+						options={years}
+						onChange={(e) => handleYearSelected(e.target.value)}
+						defaultValue={yearSelected}
+					/>
+				</ContentHeader>
 
-			<Content>
-				<WalletBox
-					title="saldo"
-					color="#4E41F0"
-					amount={totalBalance}
-					footerlabel="atualizado com base nas entradas e saídas"
-					icon="dolar"
-				/>
+				<Content>
+					<WalletBox
+						title="saldo"
+						color="#4E41F0"
+						amount={totalBalance}
+						footerlabel="atualizado com base nas entradas e saídas"
+						icon="dolar"
+					/>
 
-				<WalletBox
-					title="entradas"
-					color="#F7931B"
-					amount={totalGains}
-					footerlabel="atualizado com base nas entradas e saídas"
-					icon="arrowUp"
-				/>
+					<WalletBox
+						title="entradas"
+						color="#F7931B"
+						amount={totalGains}
+						footerlabel="atualizado com base nas entradas e saídas"
+						icon="arrowUp"
+					/>
 
-				<WalletBox
-					title="saídas"
-					color="#E44C4E"
-					amount={totalExpenses}
-					footerlabel="atualizado com base nas entradas e saídas"
-					icon="arrowDown"
-				/>
+					<WalletBox
+						title="saídas"
+						color="#E44C4E"
+						amount={totalExpenses}
+						footerlabel="atualizado com base nas entradas e saídas"
+						icon="arrowDown"
+					/>
 
-				<MessageBox
-					title={message.title}
-					description={message.description}
-					footerText={message.footerText}
-					icon={message.icon}
-				/>
+					<MessageBox
+						title={message.title}
+						description={message.description}
+						footerText={message.footerText}
+						icon={message.icon}
+					/>
 
-				<PieChartBox data={relationExpensesVersusGains} />
+					<PieChartBox data={relationExpensesVersusGains} />
 
-				<HistoryBox
-					data={historyData}
-					lineColorAmountEntry="#F7931B"
-					lineColorAmountOutput="#E44C4E"
-				/>
+					<HistoryBox
+						data={historyData}
+						lineColorAmountEntry="#F7931B"
+						lineColorAmountOutput="#E44C4E"
+					/>
 
-				<BarChartBox
-					title="Saídas"
-					data={relationExpensevesRecurrentVersusEventual}
-				/>
+					<BarChartBox
+						title="Saídas"
+						data={relationExpensevesRecurrentVersusEventual}
+					/>
 
-				<BarChartBox
-					title="Entradas"
-					data={relationGainsRecurrentVersusEventual}
-				/>
-			</Content>
-		</Container>
+					<BarChartBox
+						title="Entradas"
+						data={relationGainsRecurrentVersusEventual}
+					/>
+				</Content>
+			</Container>
+		</Layout>
 	)
 }
 

@@ -12,6 +12,7 @@ import formatDate from '../../utils/formatDate'
 import listOfMonths from '../../utils/months'
 
 import { Container, Content, Filters } from './style'
+import Layout from '../../components/Layout'
 
 interface IData {
 	id: string
@@ -152,62 +153,64 @@ const List: React.FC = () => {
 	])
 
 	return (
-		<Container>
-			<ContentHeader title={pageData.title} lineColor={pageData.lineColor}>
-				<SelectInput
-					options={months}
-					onChange={(e) => handleMonthSelected(e.target.value)}
-					defaultValue={monthSelected}
-				/>
-				<SelectInput
-					options={years}
-					onChange={(e) => handleYearSelected(e.target.value)}
-					defaultValue={yearSelected}
-				/>
-			</ContentHeader>
+		<Layout>
+			<Container>
+				<ContentHeader title={pageData.title} lineColor={pageData.lineColor}>
+					<SelectInput
+						options={months}
+						onChange={(e) => handleMonthSelected(e.target.value)}
+						defaultValue={monthSelected}
+					/>
+					<SelectInput
+						options={years}
+						onChange={(e) => handleYearSelected(e.target.value)}
+						defaultValue={yearSelected}
+					/>
+				</ContentHeader>
 
-			<Filters>
-				<button
-					type="button"
-					className={`
+				<Filters>
+					<button
+						type="button"
+						className={`
                     tag-filter 
                     tag-filter-recurrent
                     ${
 											frequencyFilterSelected.includes('recorrente') &&
 											'tag-actived'
 										}`}
-					onClick={() => handleFrequencyClick('recorrente')}
-				>
-					Recorrentes
-				</button>
+						onClick={() => handleFrequencyClick('recorrente')}
+					>
+						Recorrentes
+					</button>
 
-				<button
-					type="button"
-					className={`
+					<button
+						type="button"
+						className={`
                     tag-filter 
                     tag-filter-eventual
                     ${
 											frequencyFilterSelected.includes('eventual') &&
 											'tag-actived'
 										}`}
-					onClick={() => handleFrequencyClick('eventual')}
-				>
-					Eventuais
-				</button>
-			</Filters>
+						onClick={() => handleFrequencyClick('eventual')}
+					>
+						Eventuais
+					</button>
+				</Filters>
 
-			<Content>
-				{data.map((item) => (
-					<HistoryFinanceCard
-						key={item.id}
-						tagColor={item.tagColor}
-						title={item.description}
-						subtitle={item.dateFormatted}
-						amount={item.amountFormatted}
-					/>
-				))}
-			</Content>
-		</Container>
+				<Content>
+					{data.map((item) => (
+						<HistoryFinanceCard
+							key={item.id}
+							tagColor={item.tagColor}
+							title={item.description}
+							subtitle={item.dateFormatted}
+							amount={item.amountFormatted}
+						/>
+					))}
+				</Content>
+			</Container>
+		</Layout>
 	)
 }
 
