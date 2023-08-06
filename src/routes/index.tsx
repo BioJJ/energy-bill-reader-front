@@ -1,15 +1,17 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-
-import { useAuth } from '../hooks/auth'
+import { useSelector } from 'react-redux'
+import { RootState } from '../store'
 
 import App from './app.routes'
 import Auth from './auth.routes'
 
 const Routes: React.FC = () => {
-	const { logged } = useAuth()
+	const isLogged = useSelector(
+		(rootState: RootState) => !!rootState.globalReducer.user?.id
+	)
 
-	return <BrowserRouter>{logged ? <App /> : <Auth />}</BrowserRouter>
+	return <BrowserRouter>{isLogged ? <App /> : <Auth />}</BrowserRouter>
 }
 
 export default Routes
