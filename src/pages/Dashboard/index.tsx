@@ -2,8 +2,6 @@ import React, { useCallback, useMemo, useState } from 'react'
 import ContentHeader from '../../components/ContentHeader'
 import SelectInput from '../../components/SelectInput'
 
-import expenses from '../../repositories/expenses'
-import gains from '../../repositories/gains'
 import listOfMonths from '../../utils/months'
 
 import happyImg from '../../assets/happy.svg'
@@ -19,7 +17,10 @@ import HistoryBox from '../../components/HistoryBox'
 import BarChartBox from '../../components/BarChartBox'
 import Layout from '../../components/Layout'
 
+import { useBill } from '../List/hooks/useBill'
+
 const Dashboard: React.FC = () => {
+	const { billsFiltered } = useBill()
 	const [monthSelected, setMonthSelected] = useState<number>(
 		new Date().getMonth() + 1
 	)
@@ -30,8 +31,8 @@ const Dashboard: React.FC = () => {
 	const years = useMemo(() => {
 		const uniqueYears: number[] = []
 
-		;[...expenses, ...gains].forEach((item) => {
-			const date = new Date(item.date)
+		billsFiltered.forEach((item) => {
+			const date = new Date(item.expirationDate)
 			const year = date.getFullYear()
 
 			if (!uniqueYears.includes(year)) {
@@ -59,14 +60,14 @@ const Dashboard: React.FC = () => {
 	const totalExpenses = useMemo(() => {
 		let total: number = 0
 
-		expenses.forEach((item) => {
-			const date = new Date(item.date)
+		billsFiltered.forEach((item) => {
+			const date = new Date(item.expirationDate)
 			const year = date.getFullYear()
 			const month = date.getMonth() + 1
 
 			if (month === monthSelected && year === yearSelected) {
 				try {
-					total += Number(item.amount)
+					total += Number(item.totalValue)
 				} catch {
 					throw new Error('Invalid amount! Amount must be number.')
 				}
@@ -79,14 +80,14 @@ const Dashboard: React.FC = () => {
 	const totalGains = useMemo(() => {
 		let total: number = 0
 
-		gains.forEach((item) => {
-			const date = new Date(item.date)
+		billsFiltered.forEach((item) => {
+			const date = new Date(item.expirationDate)
 			const year = date.getFullYear()
 			const month = date.getMonth() + 1
 
 			if (month === monthSelected && year === yearSelected) {
 				try {
-					total += Number(item.amount)
+					total += Number(item.totalValue)
 				} catch {
 					throw new Error('Invalid amount! Amount must be number.')
 				}
@@ -162,14 +163,14 @@ const Dashboard: React.FC = () => {
 		return listOfMonths
 			.map((_, month) => {
 				let amountEntry = 0
-				gains.forEach((gain) => {
-					const date = new Date(gain.date)
+				billsFiltered.forEach((gain) => {
+					const date = new Date(gain.expirationDate)
 					const gainMonth = date.getMonth()
 					const gainYear = date.getFullYear()
 
 					if (gainMonth === month && gainYear === yearSelected) {
 						try {
-							amountEntry += Number(gain.amount)
+							amountEntry += Number(gain.totalValue)
 						} catch {
 							throw new Error(
 								'amountEntry is invalid. amountEntry must be valid number.'
@@ -179,14 +180,14 @@ const Dashboard: React.FC = () => {
 				})
 
 				let amountOutput = 0
-				expenses.forEach((expense) => {
-					const date = new Date(expense.date)
+				billsFiltered.forEach((expense) => {
+					const date = new Date(expense.expirationDate)
 					const expenseMonth = date.getMonth()
 					const expenseYear = date.getFullYear()
 
 					if (expenseMonth === month && expenseYear === yearSelected) {
 						try {
-							amountOutput += Number(expense.amount)
+							amountOutput += Number(expense.totalValue)
 						} catch {
 							throw new Error(
 								'amountOutput is invalid. amountOutput must be valid number.'
@@ -216,21 +217,21 @@ const Dashboard: React.FC = () => {
 		let amountRecurrent = 0
 		let amountEventual = 0
 
-		expenses
+		billsFiltered
 			.filter((expense) => {
-				const date = new Date(expense.date)
+				const date = new Date(expense.expirationDate)
 				const year = date.getFullYear()
 				const month = date.getMonth() + 1
 
 				return month === monthSelected && year === yearSelected
 			})
 			.forEach((expense) => {
-				if (expense.frequency === 'recorrente') {
-					return (amountRecurrent += Number(expense.amount))
+				if (expense.monthReference === 'JAN') {
+					return (amountRecurrent += Number(expense.totalValue))
 				}
 
-				if (expense.frequency === 'eventual') {
-					return (amountEventual += Number(expense.amount))
+				if (expense.monthReference === 'JUN') {
+					return (amountEventual += Number(expense.totalValue))
 				}
 			})
 
@@ -261,21 +262,21 @@ const Dashboard: React.FC = () => {
 		let amountRecurrent = 0
 		let amountEventual = 0
 
-		gains
+		billsFiltered
 			.filter((gain) => {
-				const date = new Date(gain.date)
+				const date = new Date(gain.expirationDate)
 				const year = date.getFullYear()
 				const month = date.getMonth() + 1
 
 				return month === monthSelected && year === yearSelected
 			})
 			.forEach((gain) => {
-				if (gain.frequency === 'recorrente') {
-					return (amountRecurrent += Number(gain.amount))
+				if (gain.monthReference === 'JAN') {
+					return (amountRecurrent += Number(gain.totalValue))
 				}
 
-				if (gain.frequency === 'eventual') {
-					return (amountEventual += Number(gain.amount))
+				if (gain.monthReference === 'JUN') {
+					return (amountEventual += Number(gain.totalValue))
 				}
 			})
 

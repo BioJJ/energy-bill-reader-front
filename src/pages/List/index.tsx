@@ -5,8 +5,6 @@ import ContentHeader from '../../components/ContentHeader'
 import SelectInput from '../../components/SelectInput'
 import HistoryFinanceCard from '../../components/HistoryFinanceCard'
 
-import gains from '../../repositories/gains'
-import expenses from '../../repositories/expenses'
 import formatCurrency from '../../utils/formatCurrency'
 import listOfMonths from '../../utils/months'
 
@@ -32,13 +30,11 @@ const List: React.FC = () => {
 		return movimentType === 'entry-balance'
 			? {
 					title: 'Historico',
-					lineColor: '#4E41F0',
-					data: gains
+					lineColor: '#4E41F0'
 			  }
 			: {
 					title: 'Saídas',
-					lineColor: '#E44C4E',
-					data: expenses
+					lineColor: '#E44C4E'
 			  }
 	}, [movimentType])
 
