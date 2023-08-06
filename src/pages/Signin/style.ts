@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import InputMask from 'react-input-mask'
 
 export const Container = styled.div`
 	height: 100vh;
@@ -40,8 +41,19 @@ export const Form = styled.form`
 	background-color: ${(props) => props.theme.colors.tertiary};
 `
 
+export const FormRegister = styled.form`
+	width: 350px;
+	height: 450px;
+
+	padding: 30px;
+
+	border-radius: 10px;
+
+	background-color: ${(props) => props.theme.colors.tertiary};
+`
+
 export const FormTitle = styled.h1`
-	margin-bottom: 40px;
+	margin-bottom: 10px;
 
 	color: ${(props) => props.theme.colors.white};
 
@@ -51,4 +63,13 @@ export const FormTitle = styled.h1`
 		width: 55px;
 		border-bottom: 10px solid ${(props) => props.theme.colors.warning};
 	}
+`
+
+export const MaskInput = styled(InputMask)`
+	width: 100%;
+
+	margin: 7px 0;
+	padding: 10px;
+
+	border-radius: 5px;
 `
