@@ -28,13 +28,13 @@ export const verifyLoggedIn = async () => {
 	if (!token) {
 		return redirect(LoginRoutesEnum.LOGIN)
 	}
-	// const user = await connectionAPIGet<UserType>(URL_USER).catch(() => {
-	// 	unsetAuthorizationToken()
-	// })
+	const user = await connectionAPIGet<UserType>(URL_USER).catch(() => {
+		unsetAuthorizationToken()
+	})
 
-	// if (!user) {
-	// 	return redirect(LoginRoutesEnum.LOGIN)
-	// }
+	if (!user) {
+		return redirect(LoginRoutesEnum.LOGIN)
+	}
 
 	return null
 }
